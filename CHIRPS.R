@@ -4,22 +4,31 @@ library("RCurl")
 library("heavyRain")
 library("devtools")
 library("heavyRain")
+library("raster")
 install_github("environmentalinformatics-marburg/chirps")
+library("R.utils")
 library(here)
-
-
-
 
 
 rm(list = ls())
 
+#Variables
+star_date <- c("1982-01-01")
+end_date <- c("1982-12-31")
+continente <- c("africa")
+#x= longitude, y= latitude;
+y= data.frame(x=36.874260, y =-1.291514)
+
+
 #Download CHIRPS data 
 chirps <- getCHIRPS("africa", tres = "monthly"
                  , format = "tifs" 
-                 ,begin = as.Date("1982-01-01")
-                 , end = as.Date("1983-12-31")
-                 , dsn = file.path(getwd(), "data"))
+                 ,begin = as.Date(star_date)
+                 , end = as.Date(end_date)
+                 , dsn = file.path(here(), "data"))
 
+#Descompresed files
+lapply(chirps, gunzip)
 
 #Separte_backsla
 #@param x is name of directory
@@ -28,16 +37,12 @@ open_file <- function(x)
 {
   name_file <- sub(".*/", "", x)
   file <- gsub(".gz", "", name_file)
-  #open_file <- paste0(getwd(), "/", name_file)
-  prec <- raster::stack(paste0(getwd))
-  return(file )
+  path <- file.path(here(), "data", file)
+  prec <- raster::stack(path)
+  cor <- raster::extract(prec, y= data.frame(x=36.874260, y =-1.291514))
+  return(cor)
 }
 
-open_file <- function(x)
-{
-  prec <- raster::stack(x)
-  return(prec)
-}
 
 
 
