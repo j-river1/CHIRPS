@@ -17,9 +17,9 @@ library(here)
 rm(list = ls())
 
 #Variables
-star_date <- c("1982-04-01")
-end_date <- c("1982-04-01")
-place <- c("africa")
+star_date <- c("1981-01-01")
+end_date <- c("2017-12-31")
+place <- c("global")
 #x_lon= longitude, y_lat= latitude;
 x_lon = 36.874260
 y_lat = -1.291514
@@ -31,6 +31,7 @@ chirps <- getCHIRPS(place, tres = "daily"
                     ,format = "tifs" 
                     ,begin = as.Date(star_date)
                     ,end = as.Date(end_date)
+                    ,sres = 0.05
                     ,dsn = file.path(here(), "data"))
 
 #Descompresed files
