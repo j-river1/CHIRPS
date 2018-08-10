@@ -12,13 +12,13 @@ library("raster")
 install_github("environmentalinformatics-marburg/chirps")
 library("R.utils")
 library(here)
-
+install_github("ropensci/plotly")
 
 rm(list = ls())
 
 #Variables
 star_date <- c("1981-01-01")
-end_date <- c("2017-12-31")
+end_date <- c("1981-12-31")
 place <- c("global")
 #x_lon= longitude, y_lat= latitude;
 x_lon = 36.874260
@@ -36,11 +36,18 @@ chirps <- getCHIRPS(place, tres = "daily"
 
 #Descompresed files
 lapply(chirps, gunzip)
+lapply(chirps, gunzip)
+
+folder <- lapply(list.files(here("global_data")), function(x){ path <- paste0(file.path(here("global_data")),"/",x)
+                                                    return(path)})
+lapply(folder, gunzip)
+
+
 
 #open_file
 open_file <- function(x)
 {
-  path <- file.path(here(), "data", x)
+  path <- file.path(here(), "global_data", x)
   prec <- raster::stack(path)
   cor <- raster::extract(prec, y= y_dat)
   date <- substr(colnames(cor), 13, 23)
@@ -51,6 +58,20 @@ open_file <- function(x)
 }
 
 #Join the files
-data <- lapply(list.files(here("chirps")), open_file)
+data <- lapply(list.files(here("global_data")), open_file)
 complete_data <- do.call(rbind, data)
+
+
+
+
+lapply(drs, getSplitURL)
+
+for (i  in 1:15)
+{
+  onl <- RCurl::getURL(drs[1], dirlistonly = TRUE)
+}
+
+cl <- parallel::makePSOCKcluster(1L)
+
+
 
